@@ -33,10 +33,13 @@ pipeline {
                        execPattern: '**/target/jacoco.exec',
                        classPattern: '**/target/classes',
                        sourcePattern: '**/src/main/java'
-                warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
-                junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
               }
             }
+          }
+        } post {
+          always {
+            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
+            junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
           }
         }
         stage( "Build / Test - JDK14" ) {
@@ -45,10 +48,13 @@ pipeline {
             container( 'jetty-build' ) {
               timeout( time: 120, unit: 'MINUTES' ) {
                 mavenBuild( "jdk14", "-T3 clean install", "maven3", true )
-                warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
-                junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml'
               }
             }
+          }
+        } post {
+          always {
+            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
+            junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
           }
         }
 
@@ -60,9 +66,12 @@ pipeline {
                 mavenBuild( "jdk11",
                             "package source:jar javadoc:jar javadoc:aggregate-jar -Peclipse-release  -DskipTests -Dpmd.skip=true -Dcheckstyle.skip=true",
                             "maven3", true )
-                warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'JavaDoc'], [parserName: 'Java']]
               }
             }
+          }
+        } post {
+          always {
+            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'JavaDoc'], [parserName: 'Java']]
           }
         }
         stage( "Build Compact3" ) {
@@ -71,9 +80,12 @@ pipeline {
             container( 'jetty-build' ) {
               timeout( time: 30, unit: 'MINUTES' ) {
                 mavenBuild( "jdk11", "-T3 -Pcompact3 clean install -DskipTests", "maven3", true )
-                warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
               }
             }
+          }
+        } post {
+          always {
+            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
           }
         }
       }
