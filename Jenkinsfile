@@ -36,10 +36,11 @@ pipeline {
               }
             }
           }
-        } post {
-          always {
-            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
-            junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
+          post {
+            always {
+              warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
+              junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
+            }
           }
         }
         stage( "Build / Test - JDK14" ) {
@@ -50,12 +51,13 @@ pipeline {
                 mavenBuild( "jdk14", "-T3 clean install", "maven3", true )
               }
             }
+          }post {
+            always {
+              warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
+              junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
+            }
           }
-        } post {
-          always {
-            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
-            junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml,**/target/autobahntestsuite-reports/*.xml'
-          }
+
         }
 
         stage( "Build Javadoc" ) {
@@ -69,9 +71,10 @@ pipeline {
               }
             }
           }
-        } post {
-          always {
-            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'JavaDoc'], [parserName: 'Java']]
+          post {
+            always {
+              warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'JavaDoc'], [parserName: 'Java']]
+            }
           }
         }
         stage( "Build Compact3" ) {
@@ -82,10 +85,10 @@ pipeline {
                 mavenBuild( "jdk11", "-T3 -Pcompact3 clean install -DskipTests", "maven3", true )
               }
             }
-          }
-        } post {
-          always {
-            warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
+          }post {
+            always {
+              warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']]
+            }
           }
         }
       }
