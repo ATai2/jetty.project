@@ -42,7 +42,7 @@ pipeline {
           steps {
             container( 'jetty-build' ) {
               timeout( time: 120, unit: 'MINUTES' ) {
-                mavenBuild( "jdk14", "-T3 clean install", "maven3", true, warnings consoleParsers: [[parserName: 'Maven'], [parserName: 'Java']] )
+                mavenBuild( "jdk14", "-T3 clean install", "maven3", true, [[parserName: 'Maven'], [parserName: 'Java']] )
               }
             }
           }
